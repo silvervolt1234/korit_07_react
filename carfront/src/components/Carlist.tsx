@@ -2,18 +2,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCars, deleteCar } from "../api/carapi";
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from "@mui/x-data-grid";
-<<<<<<< HEAD
-import { Snackbar } from "@mui/material";
-import { useState } from "react";
-import AddCar from "./AddCar";
-import EditCar from "./EditCar";
-=======
 import { Snackbar, IconButton } from "@mui/material";
 import { useState } from "react";
 import AddCar from "./AddCar";
 import EditCar from "./EditCar";
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
->>>>>>> HEAD@{1}
 
 function Carlist() {
   const [ open, setOpen ] = useState(false);
@@ -58,22 +51,13 @@ function Carlist() {
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
-<<<<<<< HEAD
-        <button 
-=======
         <IconButton aria-label="delete" size="small"
->>>>>>> HEAD@{1}
           onClick={() => {
             if (window.confirm(`${params.row.brand}의 ${params.row.model} 자동차를 삭제하시겠습니까?`)) 
             mutate(params.row._links.self.href)}}
         >
-<<<<<<< HEAD
-          Delete
-        </button>
-=======
           <DeleteForeverRoundedIcon fontSize="small"/>
         </IconButton>
->>>>>>> HEAD@{1}
       )
     }
   ];
