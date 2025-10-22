@@ -35,7 +35,28 @@ function AddCar() {
   });
 
   const handleSave = () => {
-    mutate(car);
+    const modelYearNum = Number(car.modelYear);
+    const priceNum = Number(car.price);
+
+    if (
+      !car.brand ||
+      !car.model ||
+      !car.color ||
+      !car.registrationNumber ||
+      !modelYearNum || modelYearNum <= 0 ||
+      !priceNum || priceNum <= 0
+    ) {
+      alert("모든 필수값을 올바르게 입력해야 합니다.");
+      return;
+    }
+
+    mutate({
+      ...car,
+      modelYear: modelYearNum,
+      price: priceNum
+    });
+    // 이 위로 전체
+    // mutate(car);
     setCar({
       brand: '',
       model: '',
@@ -50,7 +71,17 @@ function AddCar() {
   return(
     <>
       <Button onClick={handleClickOpen} variant="outlined">New Car</Button>
-      <Dialog open={open} >
+      <Dialog open={open}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // 기본 submit 이벤트 방지
+            handleSave();       // Save + 다이얼로그 닫기
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            handleClickClose(); // Cancel + 다이얼로그 닫기
+          }
+        }}
+      >
         <DialogTitle>New Car</DialogTitle>
         <CarDialogContent car={car} handleChange={handleChange}/>
         <DialogActions>

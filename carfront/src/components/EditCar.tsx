@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react"
 import { Car, CarResponse, CarEntity } from "../types"
-import { Dialog, DialogActions, DialogTitle, Button } from "@mui/material";
+import { Dialog, DialogActions, DialogTitle, Button, IconButton, Tooltip } from "@mui/material";
 import CarDialogContent from "./CarDialogContent";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCar } from "../api/carapi";
@@ -49,8 +49,32 @@ function EditCar({cardata}: FormProps) {
   }
 
   const handleSave = () => {
+    // const url = cardata._links.self.href;
+    // const CarEntity: CarEntity = { car, url };
+
+    // 여기서부터
     const url = cardata._links.self.href;
-    const CarEntity: CarEntity = { car, url };
+    const modelYearNum = Number(car.modelYear);
+    const priceNum = Number(car.price);
+
+    if (
+      !car.brand ||
+      !car.model ||
+      !car.color ||
+      !car.registrationNumber ||
+      !modelYearNum || modelYearNum <= 0 ||
+      !priceNum || priceNum <= 0
+    ) {
+      alert("모든 필수값을 올바르게 입력해야 합니다.");
+      return;
+    }
+
+    const CarEntity: CarEntity = { 
+      car: { ...car, modelYear: modelYearNum, price: priceNum }, 
+      url 
+    };
+    // 여기까지
+    
     mutate(CarEntity);
     setCar({
       brand: '',
@@ -70,11 +94,22 @@ function EditCar({cardata}: FormProps) {
 
   return(
     <>
-
-      <Button onClick={handleClickOpen}>
+      <Tooltip title='Edit Car'>
+      <IconButton onClick={handleClickOpen}>
         <EditRoundedIcon fontSize="small"/>
-      </Button>
-      <Dialog open={open} onClose={handleClickClose}>
+      </IconButton>
+      </Tooltip>
+      <Dialog open={open} onClose={handleClickClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // 기본 Enter 동작 방지
+            handleSave();       // 저장 + 창 닫기
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            handleClickClose(); // 취소 + 창 닫기
+          }
+        }}
+      >
         <DialogTitle>Edit Car</DialogTitle>
         <CarDialogContent car={car} handleChange={handleChange}/>
         <DialogActions>
