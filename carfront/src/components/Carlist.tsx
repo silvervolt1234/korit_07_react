@@ -56,7 +56,7 @@ function Carlist() {
             if (window.confirm(`${params.row.brand}의 ${params.row.model} 자동차를 삭제하시겠습니까?`)) 
             mutate(params.row._links.self.href)}}
         >
-          <DeleteForeverRoundedIcon fontSize="smallx`"/>
+          <DeleteForeverRoundedIcon fontSize="small"/>
         </IconButton>
       )
     }
