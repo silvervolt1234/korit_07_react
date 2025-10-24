@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, FormEvent } from "react";
+import { ChangeEvent, useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { Button, TextField, Stack, Snackbar } from "@mui/material";
 import Todo from "./Todo";
@@ -17,13 +17,13 @@ function Login() {
   const [ open, setOpen ] = useState(false);
 
 
-  // // 로그인 유지용
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem("jwt");
-  //   if (token) {
-  //     setAuth(true);
-  //   }
-  // }, []);
+  // 로그인 유지용
+  useEffect(() => { 
+    const token = sessionStorage.getItem("jwt");
+    if (token) {
+      setAuth(true);
+    }
+  }, []);
 
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

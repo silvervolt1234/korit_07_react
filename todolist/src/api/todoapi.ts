@@ -1,31 +1,45 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 export interface Todo {
-  id: number;
-  text: string;
+    id: number;
+    text: string;
 }
 
-const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      Authorization: token,
-      "Content-Type": "application/json"
+export const login = async (username: string, password: string) => {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, { username, password });
+    const token = res.headers['authorization']; 
+    if (token) {
+        sessionStorage.setItem('jwt', token);
     }
-  };
+    return token;
 };
 
-export const getTodo = async (): Promise<Todo[]> => {
-  const response = await axios.get(`http://localhost:8080/api/todos`, getAxiosConfig());
-  return response.data;
+const getAxiosConfig = (): AxiosRequestConfig => {
+    let token = sessionStorage.getItem('jwt') || '';
+    if (!token.startsWith('Bearer ')) {
+        token = `Bearer ${token}`;
+    }
+
+    return {
+        headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+        }
+    };
 };
 
-export const addTodo = async (text: string): Promise<Todo> => {
-  const response = await axios.post(`http://localhost:8080/api/todos`, { text }, getAxiosConfig());
-  return response.data;
-};
+export const getTodo = async (): Promise<Todo[]> => { 
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/todos`, getAxiosConfig());
+    console.log("Response:", response.data);
+    return response.data;
+}
 
 export const deleteTodo = async (id: number): Promise<Todo> => {
-  const response = await axios.delete(`http://localhost:8080/api/todos/${id}`, getAxiosConfig());
-  return response.data;
-};
+    const response = await axios.delete(`${import.meta.env.VITE_API_URL}/todos/${id}`, getAxiosConfig());
+    return response.data;
+}
+
+export const addTodo = async(text: string): Promise<Todo> => {      
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/todos`, { text }, getAxiosConfig());
+    return response.data;
+}
